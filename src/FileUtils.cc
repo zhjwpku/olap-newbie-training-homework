@@ -6,7 +6,7 @@
 
 std::ostream& operator<<(std::ostream& os, const FileSlice& slice)
 {
-    os << "[beg: " <<  slice.beg << "; end: " << slice.end << "; first to read: " << slice.first_to_read << ']';
+    os << slice.filename << " [beg: " <<  slice.beg << "; end: " << slice.end << "; first to read: " << slice.first_to_read << ']';
     return os;
 }
 
@@ -30,17 +30,17 @@ std::vector<FileSlice> FileUtils::splitFile(const std::string &filename, int thr
 
     // only file slice
     if (fileSize <= step) {
-        result.emplace_back(0, fileSize - 1, 0);
+        result.emplace_back(0, fileSize, 0, filename);
         return result;
     }
 
     // multiple file slices
     long beg = 0;
-    long end = step - 1;
+    long end = step;
     
     while (beg < fileSize) {
-        end = end < (fileSize - 1) ? end : (fileSize - 1);
-        result.emplace_back(beg, end, beg);
+        end = end < fileSize ? end : fileSize;
+        result.emplace_back(beg, end, beg, filename);
         beg += step;
         end += step;
     }
@@ -51,8 +51,8 @@ std::vector<FileSlice> FileUtils::splitFile(const std::string &filename, int thr
     for (int i = 0; i < result.size() - 1; i++) {
         inf.seekg(result[i].end, std::ios::beg);
         std::getline(inf, strData);
-        result[i].end += strData.size();
-        result[i+1].first_to_read += strData.size();
+        result[i].end += strData.size() + 1;
+        result[i+1].first_to_read += strData.size() + 1;
     }
 
     return result;
