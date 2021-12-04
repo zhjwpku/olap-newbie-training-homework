@@ -9,7 +9,5 @@ add_library(solution STATIC ${solution_srcs})
 target_include_directories(solution INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(solution
-  PUBLIC folly
-  PUBLIC pthread
   PUBLIC project_options
 )

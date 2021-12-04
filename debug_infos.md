@@ -74,3 +74,18 @@ vdb           1920.00    7.00 286748.00     28.00     0.00     0.00   0.00   0.0
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
            0.00    0.00    1.51   51.39    0.00   47.10
 ```
+
+我在全息平台买的磁盘规格为 320 G PL1 ESSD, 根据 [云盘概述](https://help.aliyun.com/document_detail/25383.html) 里的单盘吞吐量性能计算公式，其吞吐性能的 SLA 为:
+
+min{120+0.5*容量, 350} = min{120 + 0.5 * 320} = 280 MB/s，基本符合实测效果。
+
+运行时间
+
+load linetime split file use time 75701 ns.
+read and parse the file use time 268468140731 ns.
+merge unordered_map to map use time 17599990363 ns.
+The max value between 100 and 200 is key:137, value: zzle slyly special ide; used time 26268 ns.
+The max value between 200 and 2000 is key:892, value: zzle. special ; used time 336874 ns.
+The max value between 5000 and 6000 is key:5126, value: zzle; slyly ironic account; used time 203284 ns.
+The max value between 2345 and 6789 is key:5126, value: zzle; slyly ironic account; used time 837166 ns.
+The max value between 123 and 456 is key:375, value: zzle. fluffily r; used time 57281 ns.

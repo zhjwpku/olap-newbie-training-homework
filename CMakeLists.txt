@@ -39,13 +39,7 @@ target_compile_features(project_options INTERFACE cxx_std_17)
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 option(ENABLE_TESTING "Enable Test Builds" ON)
 
-# Find Required Packages
-FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Folly REQUIRED)
 FIND_PACKAGE(GTest REQUIRED)
-FIND_PACKAGE(GLog REQUIRED)
-FIND_PACKAGE(GFlags REQUIRED)
-FIND_PACKAGE(Iberty REQUIRED)
 
 add_subdirectory(src)
 

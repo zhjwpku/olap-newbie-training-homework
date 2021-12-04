@@ -100,24 +100,13 @@ Primary Key: S_SUPPKEY
 
 ### 方案设计
 
-多线程读取文件，使用 concurrent hash map 保存各个键对应的 comment 值，当一个键已经存在与 hash map 中，则通过比较，如果新值比较大，则更新。
-
-读取完之后将 hash map 中的值保存到 map 中，方便后面检索，如果查询次数多还可以将其保存到 vector 中。
+1. 多线程读取文件，每个线程分别使用 unordered_map 保存各个键对应的 comment 值，当一个键已经存在，则通过比较决定是否更新。
+2. 读取完之后将各线程的 unordered_map 合并到一个 map 中，供 query 查询。
 
 ### Build & Run
 
-首先使用包管理器安装一些依赖包：
-
 ```
-apt install -y libiberty-dev
-apt install -y libgflags-dev
 apt install -y googletest
-apt install -y libgoogle-glog-dev
-```
-
-先安装一下 [fmt](https://github.com/fmtlib/fmt.git)、[folly](https://github.com/facebook/folly.git)，编译的时候加 CMAKE 参数 `-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON`，然后回到本目录，执行:
-
-```
 mkdir build && cd build
 cmake ..
 make -j4
@@ -128,3 +117,11 @@ make -j4
 ```
 ./bin/solutionTest
 ```
+
+### 耗时分析
+
+ECS 实例规格: ecs.c7.xlarge（4 vCPU 8 GiB），磁盘 320G PL1
+
+- 读文件并解析文件消耗最主要的时间 270 秒左右
+- 将 unordered_map 合并到 map 耗时 18 秒左右
+- 查询时间跟查询范围相关，当前用例都在1毫秒以下，如果范围太大可以考虑增加辅助结构加速查询
