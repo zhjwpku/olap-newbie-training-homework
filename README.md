@@ -14,6 +14,8 @@ select max(l_comment) from lineitem where l_suppkey > {param1} and l_suppkey <{p
 然后读取n组参数（每组为两个整数，param1和param2），然后分别打印每组条件下的最大 comment。
 
 测试样例{实际参数不定}：
+
+```
 输入：
 5
 100 200
@@ -28,6 +30,7 @@ zzle? slyly final platelets sleep quickly.
 zzle? slyly final platelets sleep quickly.
 zzle? blithely ironi
 zzle. special sentiments along
+```
 
 ### 生成 100GB lineitem.tbl 文件
 
@@ -125,3 +128,8 @@ ECS 实例规格: ecs.c7.xlarge（4 vCPU 8 GiB），磁盘 320G PL1
 - 读文件并解析文件消耗最主要的时间 270 秒左右
 - 将 unordered_map 合并到 map 耗时 18 秒左右
 - 查询时间跟查询范围相关，当前用例都在1毫秒以下，如果范围太大可以考虑增加辅助结构加速查询
+
+### 一些可能的优化点
+
+- 将 supp_key 的取值范围进行分区，每个分区分别记录其最大值，对于查询跨多个分区的，分三部分进行查询
+- 由于 supp_key 的取值为 [0,1000000)，可以使用 vector 替换 unordered_map 和 merge 阶段的 map
